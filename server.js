@@ -2,15 +2,14 @@ const express = require('express');
 const path = require('path');
 
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 
 // Parse JSON bodies
 app.use(express.json());
 
-// Serve static files from 'public' folder
-app.use(express.static(path.resolve(__dirname, 'public')));
+// Serve static files
+app.use(express.static(path.join(__dirname, 'public')));
 
-// Store latest bus location
 let busLocations = [];
 
 // Driver posts location
@@ -27,16 +26,25 @@ app.post('/update-location', (req, res) => {
 
 // Commuter fetches location
 app.get('/get-locations', (req, res) => {
-  
   res.json(busLocations);
 });
 
-// Test root route
+// Serve driver.html
+app.get('/driver', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'driver.html'));
+});
+
+// Serve commuter.html
+app.get('/commuter', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'commuter.html'));
+});
+
+// Redirect root to commuter
 app.get('/', (req, res) => {
-  res.send('Hello World');
+  res.redirect('/commuter');
 });
 
 // Start server
 app.listen(PORT, () => {
-  console.log(`Server running at http://localhost:${PORT}`);
+  console.log(`Server running on port ${PORT}`);
 });
