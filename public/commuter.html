@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Commuter - Bus Tracker</title>
+</head>
+<body>
+  <h2>Commuter Page</h2>
+  <pre id="locations">Loading...</pre>
+
+  <script>
+    async function fetchLocation() {
+      try {
+        const res = await fetch('/get-locations');
+        const data = await res.json();
+        document.getElementById("locations").innerText = JSON.stringify(data, null, 2);
+      } catch (err) {
+        document.getElementById("locations").innerText = "Error fetching location";
+      }
+    }
+
+    fetchLocation();
+    setInterval(fetchLocation, 3000); // Refresh every 3 seconds
+  </script>
+</body>
+</html>

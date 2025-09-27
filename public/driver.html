@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Driver - Bus Tracker</title>
+</head>
+<body>
+    <h2>Driver page</h2>
+    <p id="status">Fetching location....</p>
+    
+    <script>
+        async function sendLocation(lat, lng) {
+            await fetch('/update-location', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ lat, lng })
+
+            });
+        }
+
+        if (navigator.geolocation) {
+            navigator.geolocation.watchPosition(
+                (pos) => {
+                    const lat = pos.coords.latitude;
+                    const lng = pos.coords.longitude;
+                    document.getElementById("status").innerText = `Latitude: ${lat}, Longitude: ${lng}`;
+                    sendLocation(lat, lng);
+                },
+                (err) => console.error(err),
+                { enableHighAccuracy: true }
+            );
+        } else {
+            alert("Geolocation not supported.");
+        
+        }
+                
+    </script>
+</body>
+</html> 
