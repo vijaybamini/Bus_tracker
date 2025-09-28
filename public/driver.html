@@ -10,12 +10,15 @@
     <p id="status">Fetching location....</p>
     
     <script>
+        // Prompt for driver code (ID) once
+        const driverCode = prompt("Enter your driver code or bus ID:");
+
         async function sendLocation(lat, lng) {
+            if (!driverCode) return;
             await fetch('/update-location', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ lat, lng })
-
+                body: JSON.stringify({ code: driverCode, lat, lng })
             });
         }
 
@@ -32,9 +35,7 @@
             );
         } else {
             alert("Geolocation not supported.");
-        
         }
-                
     </script>
 </body>
 </html> 
