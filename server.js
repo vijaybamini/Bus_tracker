@@ -10,21 +10,22 @@ app.use(express.json());
 // Serve static files
 app.use(express.static(path.join(__dirname, 'public')));
 
-let busLocations = [];
+// Store locations for multiple drivers by code
+let busLocations = {}; // { code: { lat, lng, timestamp } }
 
-// Driver posts location
+// Driver posts location with a code (driver ID)
 app.post('/update-location', (req, res) => {
-  const { lat, lng } = req.body;
-  if (lat && lng) {
-    busLocations = [{ lat, lng, timestamp: Date.now() }];
-    console.log('Location updated:', busLocations);
+  const { code, lat, lng } = req.body;
+  if (code && lat && lng) {
+    busLocations[code] = { lat, lng, timestamp: Date.now() };
+    console.log(`Location updated for code ${code}:`, busLocations[code]);
     res.sendStatus(200);
   } else {
-    res.status(400).send('Invalid location');
+    res.status(400).send('Invalid location or code');
   }
 });
 
-// Commuter fetches location
+// Commuter fetches all driver locations
 app.get('/get-locations', (req, res) => {
   res.json(busLocations);
 });
@@ -47,4 +48,4 @@ app.get('/', (req, res) => {
 // Start server
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
-});
+});xz
